@@ -48,4 +48,18 @@ class Home extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function update_task()
+	{
+		$task_id = $this->input->post('task_id');
+		$task_value = $this->input->post('task_value');
+		//echo $task_id.' '.$task_value;die();
+		$data = array();
+		$data['title'] = $task_value;
+		if($this->Basic_model->update_function('id', $task_id, 'todo_list', $data) > 0){
+			echo 1;
+		}else{
+			echo 0;
+		}
+	}
 }

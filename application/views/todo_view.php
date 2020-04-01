@@ -61,16 +61,16 @@
 							</div>
 							<div class="col-md-9">
 								<div class="col-md-1">
-									<a href="javascript:void(0)" onclick="#"><span>All</span></a>
+									<a href="javascript:void(0)" onclick="take_action(<?= ALL_TASKS ?>)"><span>All</span></a>
 								</div>
 								<div class="col-md-2">
-									<a href="javascript:void(0)" onclick="#"><span>Active</span></a>
+									<a href="javascript:void(0)" onclick="take_action(<?= ACTIVE ?>)"><span>Active</span></a>
 								</div>
 								<div class="col-md-3">
-									<a href="javascript:void(0)" onclick="#"><span>Completed</span></a>
+									<a href="javascript:void(0)" onclick="take_action(<?= COMPLETED ?>)"><span>Completed</span></a>
 								</div>
 								<div class="col-md-3">
-									<a href="javascript:void(0)" onclick="#"><span>Clear Completed</span></a>
+									<a href="javascript:void(0)" onclick="take_action(<?= CLEAR_COMPLETED ?>)"><span>Clear Completed</span></a>
 								</div>
 							</div>
 						</div>
@@ -113,7 +113,6 @@
 	var total_tasks = 0;
 	jQuery(document).ready(function($) {
 		initialise_tasks();
-		//clear_tasks();
 		var $todo_tasks = $("#todo_tasks");
 
 		$todo_tasks.find('input[type="text"]').on('keydown', function(ev)
@@ -198,6 +197,67 @@
 					replaceCheckboxes();
 				}
 				$('#total_task_span').html(total_tasks+' tasks left');
+			}
+		});
+	}
+
+	function take_action(action_type) {
+		if(action_type == <?= ALL_TASKS ?>){
+			initialise_tasks();
+		}else if(action_type == <?= CLEAR_COMPLETED ?>){
+			clear_tasks();
+		}
+		else{
+			var selected = [];
+			$('div#checkboxes input[type=checkbox]').each(function() {
+				if ($(this).is(":checked")) {
+					selected.push($(this).attr('value'));
+				}
+			});
+			if(selected.length > 0){
+				$.ajax({
+					async: false,
+					type: 'POST',
+					url: '<?php echo site_url("post_action");?>',
+					data: {
+						'action_type': action_type,
+						'task_id': selected
+					},
+					success: function (data) {
+						if(data == 1){
+							initialise_tasks(<?= PENDING ?>);
+						}
+					}
+				});
+			}else{
+				initialise_tasks(action_type);
+			}
+		}
+	}
+
+	function toggle_input_field(input_field_id, input_value) {
+		let todo  = '<input type="text" class="custom_input" onkeydown="update('+input_field_id+')" style="color: black" id="task_input_'+input_field_id+'" value="'+input_value+'" />';
+		$('#task_'+input_field_id).empty().append(todo);
+	}
+
+	function update(task_id) {
+		if(event.key === 'Enter') {
+			update_task(task_id);
+		}
+	}
+
+	function update_task(input_field_id) {
+		let task_value = $('#task_input_'+input_field_id).val();
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '<?php echo site_url("update_task");?>',
+			data: {
+				'task_id': input_field_id,
+				'task_value': task_value
+			},
+			success: function (data) {
+				initialise_tasks();
 			}
 		});
 	}

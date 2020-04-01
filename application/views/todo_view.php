@@ -109,10 +109,98 @@
 
 <!-- JavaScripts initializations and stuff -->
 <script src="<?= site_url('public/assets/js/neon-custom.js') ?>"></script>
+<script type="text/javascript">
+	var total_tasks = 0;
+	jQuery(document).ready(function($) {
+		initialise_tasks();
+		//clear_tasks();
+		var $todo_tasks = $("#todo_tasks");
 
+		$todo_tasks.find('input[type="text"]').on('keydown', function(ev)
+		{
+			if(ev.keyCode == 13)
+			{
+				ev.preventDefault();
+				var task_id = add_task($.trim($(this).val()));
+				if(task_id > 0){
+					initialise_tasks();
+				}
+			}
+		});
+	});
 
-<!-- Demo Settings -->
-<script src="<?= site_url('public/assets/js/neon-demo.js') ?>"></script>
+	function add_task(task_name) {
+		var result = 0;
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '<?php echo site_url("post_task");?>',
+			data: {
+				'task_name': task_name
+			},
+			success: function (data) {
+				if(data > 0){
+					result = data;
+				}
+			}
+		});
+		if(result > 0){
+			return result;
+		}else{
+			return false;
+		}
+	}
 
+	function initialise_tasks(task_status=null) {
+		$('#todo_list').empty();
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '<?php echo site_url("get_tasks");?>',
+			data: {
+				'status': task_status
+			},
+			success: function (data) {
+				let res = $.parseJSON(data);
+				let total_tasks = Object.keys(res.data).length;
+				let new_res = {...res};
+				let todos = '';
+				for (var key of Object.keys(new_res.data)) {
+					let task_id = res.data[key].id;
+					let title = res.data[key].title;
+					let status = res.data[key].status;
+					if(task_status){
+						if(status == task_status){
+							todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+						}else{
+							todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+						}
+					}else{
+						if(status == <?= PENDING ?>){
+							todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+						}else{
+							todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+						}
+					}
+					$('#todo_list').append(todos);
+					replaceCheckboxes();
+				}
+				$('#total_task_span').html(total_tasks+' tasks left');
+			}
+		});
+	}
+</script>
 </body>
 </html>

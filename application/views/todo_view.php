@@ -40,8 +40,8 @@
 	<div class="main-content">
 		<div class="row">
 
-			<div class="col-sm-5">
-				<h3>Todos</h3>
+			<div class="col-sm-12">
+				<h3 style="text-align: center">Todos</h3>
 				<div class="tile-block tile-white" id="todo_tasks">
 					<div class="tile-content" id="checkboxes">
 
@@ -288,7 +288,7 @@
 			},
 			success: function (data) {
 				if(data == 1){
-					initialise_tasks(<?= PENDING ?>);
+					initialise_tasks();
 				}
 			}
 		});

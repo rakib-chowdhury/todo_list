@@ -14,6 +14,8 @@
 
 <p>Create a database, copy the database name and paste it in the database attribute under db['default'] array in application/config/database.php file</p>
 
+<p>Import the database file from db_file directory.</p>
+
 <p>And you are done!</p>
 
 <h2>Description</h2>

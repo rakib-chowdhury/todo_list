@@ -1,8 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+/**
+ * Class Home
+ * @author Rakib Ibna Hamid Chowdhury
+ * @copyright Copyright (c) 2020, Rakib Ibna Hamid Chowdhury
+ */
 class Home extends CI_Controller {
-
+	/**
+	 * Constructor
+	 * Load necessary models, libraries & helpers
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -11,11 +18,19 @@ class Home extends CI_Controller {
 		$this->load->model('Basic_model');
 	}
 
+	/**
+	 * Shows home page
+	 * @return mixed
+	 */
 	public function index()
 	{
 		$this->load->view('todo_view');
 	}
 
+	/**
+	 * Fetches tasks
+	 * @return mixed
+	 */
 	public function fetch_tasks()
 	{
 		$status = $this->input->post('status');
@@ -34,6 +49,10 @@ class Home extends CI_Controller {
 		echo json_encode(array('data'=>$data));
 	}
 
+	/**
+	 * Adds new task
+	 * @return mixed
+	 */
 	public function post_task()
 	{
 		$this->form_validation->set_rules('task_name', 'Task Name', 'trim|required');
@@ -55,6 +74,10 @@ class Home extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Updates task
+	 * @return mixed
+	 */
 	public function update_task()
 	{
 		$this->form_validation->set_rules('task_value', 'Value', 'trim|required');
@@ -73,6 +96,10 @@ class Home extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Deletes task
+	 * @return mixed
+	 */
 	public function delete_task()
 	{
 		$task_id = $this->input->post('task_id');
@@ -83,6 +110,10 @@ class Home extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Performs action according to the selected tasks and actions
+	 * @return mixed
+	 */
 	public function post_action()
 	{
 		$action_type = $this->input->post('action_type');

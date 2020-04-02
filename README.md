@@ -6,7 +6,7 @@
 <body>
 <h1>Simple To-Do List</h1>
 
-<p>This is a simple to-do application developed in php <a href="https://codeigniter.com/">codeigniter</a> framework.</p>
+<p>This is a simple to-do application developed in php <a href="https://codeigniter.com/" target="_blank">codeigniter</a> framework.</p>
 
 <h2>Installation</h2>
 

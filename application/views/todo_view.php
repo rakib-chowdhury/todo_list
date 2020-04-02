@@ -225,7 +225,7 @@
 					},
 					success: function (data) {
 						if(data == 1){
-							initialise_tasks(<?= PENDING ?>);
+							initialise_tasks();
 						}
 					}
 				});

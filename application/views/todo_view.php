@@ -10,7 +10,7 @@
 
 	<link rel="icon" href="<?= site_url('public/assets/images/favicon.ico') ?>">
 
-	<title>Assignment</title>
+	<title>To-Do</title>
 
 	<link rel="stylesheet" href="<?= site_url('public/assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css') ?>">
 	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">

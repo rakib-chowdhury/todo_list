@@ -35,31 +35,40 @@ class Home extends CI_Controller {
 
 	public function post_task()
 	{
-		$task_name = $this->input->post('task_name');
-		$data = [];
-		$data['title'] = $task_name;
-		$data['status'] = PENDING;
-		$data['created_on'] = $this->todo_lib->convert_date_time_to_millisecond(date('Y-m-d'), date('H:i:s'));
-		$insert_id = $this->Basic_model->insert_ret('todo_list', $data);
-		$data = [];
-		if($insert_id > 0){
-			echo $insert_id;
-		}else{
+		$this->form_validation->set_rules('task_name', 'Task Name', 'trim|required');
+		if($this->form_validation->run() === FALSE){
 			echo 0;
+		}else{
+			$task_name = $this->input->post('task_name');
+			$data = [];
+			$data['title'] = $task_name;
+			$data['status'] = PENDING;
+			$data['created_on'] = $this->todo_lib->convert_date_time_to_millisecond(date('Y-m-d'), date('H:i:s'));
+			$insert_id = $this->Basic_model->insert_ret('todo_list', $data);
+			$data = [];
+			if($insert_id > 0){
+				echo $insert_id;
+			}else{
+				echo 0;
+			}
 		}
 	}
 
 	public function update_task()
 	{
-		$task_id = $this->input->post('task_id');
-		$task_value = $this->input->post('task_value');
-		//echo $task_id.' '.$task_value;die();
-		$data = array();
-		$data['title'] = $task_value;
-		if($this->Basic_model->update_function('id', $task_id, 'todo_list', $data) > 0){
-			echo 1;
-		}else{
+		$this->form_validation->set_rules('task_value', 'Value', 'trim|required');
+		if($this->form_validation->run() === FALSE){
 			echo 0;
+		}else{
+			$task_id = $this->input->post('task_id');
+			$task_value = $this->input->post('task_value');
+			$data = array();
+			$data['title'] = $task_value;
+			if($this->Basic_model->update_function('id', $task_id, 'todo_list', $data) > 0){
+				echo 1;
+			}else{
+				echo 0;
+			}
 		}
 	}
 

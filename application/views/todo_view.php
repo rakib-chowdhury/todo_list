@@ -120,10 +120,8 @@
 			if(ev.keyCode == 13)
 			{
 				ev.preventDefault();
-				var task_id = add_task($.trim($(this).val()));
-				if(task_id > 0){
-					initialise_tasks();
-				}
+				add_task($.trim($(this).val()));
+				initialise_tasks();
 			}
 		});
 	});

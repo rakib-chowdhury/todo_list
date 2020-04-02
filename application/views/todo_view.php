@@ -13,7 +13,6 @@
 	<title>Assignment</title>
 
 	<link rel="stylesheet" href="<?= site_url('public/assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css') ?>">
-	<link rel="stylesheet" href="<?= site_url('public/assets/css/font-icons/entypo/css/entypo.css') ?>">
 	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
 	<link rel="stylesheet" href="<?= site_url('public/assets/css/bootstrap.css') ?>">
 	<link rel="stylesheet" href="<?= site_url('public/assets/css/neon-core.css') ?>">
@@ -160,7 +159,6 @@
 			success: function (data) {
 				let res = $.parseJSON(data);
 				let total_tasks = res.data.tasks ? Object.keys(res.data.tasks).length : 0;
-				console.log(total_tasks);
 				let new_res = {...res};
 				let todos = '';
 				if(new_res.data.tasks){

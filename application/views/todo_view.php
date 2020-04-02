@@ -277,6 +277,22 @@
 			}
 		});
 	}
+
+	function clear_tasks() {
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '<?php echo site_url("post_action");?>',
+			data: {
+				'action_type': <?= CLEAR_COMPLETED ?>
+			},
+			success: function (data) {
+				if(data == 1){
+					initialise_tasks(<?= PENDING ?>);
+				}
+			}
+		});
+	}
 </script>
 </body>
 </html>

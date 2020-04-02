@@ -72,4 +72,23 @@ class Home extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function post_action()
+	{
+		$action_type = $this->input->post('action_type');
+		$tasks = $this->input->post('task_id');
+		if($action_type == CLEAR_COMPLETED){
+			if($this->Basic_model->delete_function('todo_list', 'status', COMPLETED) > 0){
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}else{
+			if($this->Basic_model->perform_action($action_type, $tasks)){
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+	}
 }

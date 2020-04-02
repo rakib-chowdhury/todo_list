@@ -9,3 +9,4 @@ $route['get_tasks'] = 'home/fetch_tasks';
 $route['post_task'] = 'home/post_task';
 $route['update_task'] = 'home/update_task';
 $route['delete_task'] = 'home/delete_task';
+$route['post_action'] = 'home/post_action';

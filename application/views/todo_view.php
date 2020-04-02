@@ -261,6 +261,22 @@
 			}
 		});
 	}
+
+	function remove_task(task_id) {
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '<?php echo site_url("delete_task");?>',
+			data: {
+				'task_id': task_id
+			},
+			success: function (data) {
+				if(data == 1){
+					initialise_tasks(<?= PENDING ?>);
+				}
+			}
+		});
+	}
 </script>
 </body>
 </html>

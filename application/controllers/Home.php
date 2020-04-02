@@ -62,4 +62,14 @@ class Home extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function delete_task()
+	{
+		$task_id = $this->input->post('task_id');
+		if($this->Basic_model->delete_function('todo_list', 'id', $task_id) > 0){
+			echo 1;
+		}else{
+			echo 0;
+		}
+	}
 }

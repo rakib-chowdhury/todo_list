@@ -69,7 +69,7 @@
 								<div class="col-md-3">
 									<a href="javascript:void(0)" onclick="take_action(<?= COMPLETED ?>)"><span>Completed</span></a>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-3" id="clear_tasks_div" hidden>
 									<a href="javascript:void(0)" onclick="take_action(<?= CLEAR_COMPLETED ?>)"><span>Clear Completed</span></a>
 								</div>
 							</div>
@@ -159,40 +159,48 @@
 			},
 			success: function (data) {
 				let res = $.parseJSON(data);
-				let total_tasks = Object.keys(res.data).length;
+				let total_tasks = res.data.tasks ? Object.keys(res.data.tasks).length : 0;
+				console.log(total_tasks);
 				let new_res = {...res};
 				let todos = '';
-				for (var key of Object.keys(new_res.data)) {
-					let task_id = res.data[key].id;
-					let title = res.data[key].title;
-					let status = res.data[key].status;
-					if(task_status){
-						if(status == task_status){
-							todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
-								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+				if(new_res.data.tasks){
+					for (var key of Object.keys(new_res.data.tasks)) {
+						let task_id = res.data.tasks[key].id;
+						let title = res.data.tasks[key].title;
+						let status = res.data.tasks[key].status;
+						if(task_status){
+							if(status == task_status){
+								todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+									'\t\t\t\t\t\t\t\t\t</button></div></li>';
+							}else{
+								todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+									'\t\t\t\t\t\t\t\t\t</button></div></li>';
+							}
 						}else{
-							todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
-								'\t\t\t\t\t\t\t\t\t</button></div></li>';
+							if(status == <?= PENDING ?>){
+								todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+									'\t\t\t\t\t\t\t\t\t</button></div></li>';
+							}else{
+								todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
+									'\t\t\t\t\t\t\t\t\t</button></div></li>';
+							}
 						}
-					}else{
-						if(status == <?= PENDING ?>){
-							todos = '<li id="task_'+task_id+'"><div class="checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
-								'\t\t\t\t\t\t\t\t\t</button></div></li>';
-						}else{
-							todos = '<li id="task_'+task_id+'"><div class="checked checkbox checkbox-replace color-white"><input type="checkbox" class="custom_checkbox" id="'+task_id+'" value="'+task_id+'" /><label style="text-decoration: line-through" onclick="toggle_input_field(\''+task_id+'\', \''+title+'\')">'+title+'</label><button type="button" class="close" onclick="remove_task('+task_id+')" data-dismiss="alert">\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span aria-hidden="true">&times;</span>\n' +
-								'\t\t\t\t\t\t\t\t\t\t<span class="sr-only">Close</span>\n' +
-								'\t\t\t\t\t\t\t\t\t</button></div></li>';
-						}
+						$('#todo_list').append(todos);
+						replaceCheckboxes();
 					}
-					$('#todo_list').append(todos);
-					replaceCheckboxes();
+				}
+				if(res.data.has_completed_tasks == 0){
+					$('#clear_tasks_div').prop('hidden', true);
+				}else{
+					$('#clear_tasks_div').prop('hidden', false);
 				}
 				$('#total_task_span').html(total_tasks+' tasks left');
 			}

@@ -26,10 +26,11 @@ class Home extends CI_Controller {
 		}else{
 			$get_tasks = $this->Basic_model->get_where('id, title, status', "id > 0", 'todo_list');
 		}
+		$status_to_be_checked = COMPLETED;
+		$check_tasks = $this->Basic_model->get_where('id, title, status', "status = '$status_to_be_checked'", 'todo_list');
 		$data = [];
-		if($get_tasks->num_rows() > 0){
-			$data = $get_tasks->result_array();
-		}
+		$data['tasks'] = $get_tasks->num_rows() > 0 ? $get_tasks->result_array() : null;
+		$data['has_completed_tasks'] = $check_tasks->num_rows() > 0 ? 1 : 0;
 		echo json_encode(array('data'=>$data));
 	}
 
